@@ -32,6 +32,14 @@ export const RemotionVideo: React.FC = () => {
 				height={1200}
 				width={1600}
 			/>
+			<Composition
+				id="Cybertruck"
+				lazyComponent={() => import('./Cybertruck')}
+				durationInFrames={500}
+				fps={30}
+				height={850}
+				width={850}
+			/>
 		</>
 	);
 };
