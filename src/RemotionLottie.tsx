@@ -53,17 +53,10 @@ const RemotionLottie = ({
 			continueRender(handle);
 		};
 
-		// Workaround for Lottie behaviour: the `data_ready` event
-		// is not fired when the animation is loaded from a file
-		if (animationData) {
-			onComplete();
-			return;
-		}
-
-		animation.addEventListener('data_ready', onComplete);
+		animation.addEventListener('DOMLoaded', onComplete);
 
 		return () => {
-			animation.removeEventListener('data_ready', onComplete);
+			animation.removeEventListener('DOMLoaded', onComplete);
 			animation.destroy();
 		};
 	}, [animationData, handle, path, speed]);
