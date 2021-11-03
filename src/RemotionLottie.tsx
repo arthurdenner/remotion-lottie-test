@@ -14,14 +14,16 @@ const getNextFrame = (
 
 // Simple and limited interface to start with
 interface RemotionLottieProps {
+	animationData?: any;
 	className?: string;
 	loop?: boolean;
-	path: string;
+	path?: string;
 	speed?: number;
 	style?: CSSProperties;
 }
 
 const RemotionLottie = ({
+	animationData,
 	className,
 	loop,
 	path,
@@ -41,6 +43,7 @@ const RemotionLottie = ({
 		animationRef.current = lottie.loadAnimation({
 			container: containerRef.current,
 			autoplay: false,
+			animationData,
 			path,
 		});
 
@@ -50,13 +53,20 @@ const RemotionLottie = ({
 			continueRender(handle);
 		};
 
+		// Workaround for Lottie behaviour: the `data_ready` event
+		// is not fired when the animation is loaded from a file
+		if (animationData) {
+			onComplete();
+			return;
+		}
+
 		animation.addEventListener('data_ready', onComplete);
 
 		return () => {
 			animation.removeEventListener('data_ready', onComplete);
 			animation.destroy();
 		};
-	}, [handle, path, speed]);
+	}, [animationData, handle, path, speed]);
 
 	React.useEffect(() => {
 		if (!animationRef.current) {

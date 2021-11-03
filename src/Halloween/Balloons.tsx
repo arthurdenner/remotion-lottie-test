@@ -2,6 +2,7 @@ import React from 'react';
 import {Sequence, interpolate, useCurrentFrame, useVideoConfig} from 'remotion';
 import HeaderAndCredits from './HeaderAndCredits';
 import RemotionLottie from '../RemotionLottie';
+import balloonsAnimation from './balloons.json';
 import './common.css';
 
 const Balloons = () => {
@@ -17,7 +18,7 @@ const Balloons = () => {
 		<div style={{opacity, display: 'grid', alignContent: 'center', flex: 1}}>
 			<RemotionLottie
 				// https://lottiefiles.com/81293-horror-ballons
-				path="https://assets9.lottiefiles.com/packages/lf20_rt9mhehe.json"
+				animationData={balloonsAnimation}
 				speed={2}
 				style={{height: 700}}
 			/>
