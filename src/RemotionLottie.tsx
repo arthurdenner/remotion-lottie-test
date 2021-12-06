@@ -32,7 +32,7 @@ const RemotionLottie = ({
 }: RemotionLottieProps) => {
 	const animationRef = React.useRef<AnimationItem>();
 	const containerRef = React.useRef<HTMLDivElement>(null);
-	const [handle] = React.useState(delayRender);
+	const delayRef = React.useRef(0);
 	const frame = useCurrentFrame();
 
 	React.useEffect(() => {
@@ -40,6 +40,7 @@ const RemotionLottie = ({
 			return;
 		}
 
+		delayRef.current = delayRender();
 		animationRef.current = lottie.loadAnimation({
 			container: containerRef.current,
 			autoplay: false,
@@ -50,7 +51,7 @@ const RemotionLottie = ({
 		const {current: animation} = animationRef;
 		const onComplete = () => {
 			animation.setSpeed(speed);
-			continueRender(handle);
+			continueRender(delayRef.current);
 		};
 
 		animation.addEventListener('DOMLoaded', onComplete);
@@ -59,7 +60,7 @@ const RemotionLottie = ({
 			animation.removeEventListener('DOMLoaded', onComplete);
 			animation.destroy();
 		};
-	}, [animationData, handle, path, speed]);
+	}, [animationData, path, speed]);
 
 	React.useEffect(() => {
 		if (!animationRef.current) {
