@@ -31,6 +31,7 @@ const RemotionLottie = ({
 	style,
 }: RemotionLottieProps) => {
 	const animationRef = React.useRef<AnimationItem>();
+	const lastFrameRef = React.useRef<number | null>(null);
 	const containerRef = React.useRef<HTMLDivElement>(null);
 	const [handle] = React.useState(delayRender);
 	const frame = useCurrentFrame();
@@ -47,6 +48,10 @@ const RemotionLottie = ({
 			path,
 		});
 
+		if (lastFrameRef.current) {
+			animationRef.current.goToAndStop(lastFrameRef.current, true);
+		}
+
 		const {current: animation} = animationRef;
 		const onComplete = () => {
 			animation.setSpeed(speed);
@@ -56,6 +61,7 @@ const RemotionLottie = ({
 		animation.addEventListener('DOMLoaded', onComplete);
 
 		return () => {
+			lastFrameRef.current = animation.currentFrame;
 			animation.removeEventListener('DOMLoaded', onComplete);
 			animation.destroy();
 		};
