@@ -1,7 +1,14 @@
-import {interpolate, Sequence, useCurrentFrame, useVideoConfig} from 'remotion';
+import {
+	Img,
+	interpolate,
+	Sequence,
+	useCurrentFrame,
+	useVideoConfig,
+} from 'remotion';
 import {Logo} from './HelloWorld/Logo';
 import {Subtitle} from './HelloWorld/Subtitle';
 import {Title} from './HelloWorld/Title';
+import elephant from './HelloWorld/random.jpeg';
 
 export const HelloWorld: React.FC<{
 	titleText: string;
@@ -24,6 +31,7 @@ export const HelloWorld: React.FC<{
 	return (
 		<div style={{flex: 1, backgroundColor: 'white'}}>
 			<div style={{opacity}}>
+				<Img src="./random.jpeg" onError={console.error} />
 				<Sequence from={0} durationInFrames={videoConfig.durationInFrames}>
 					<Logo transitionStart={transitionStart} />
 				</Sequence>
