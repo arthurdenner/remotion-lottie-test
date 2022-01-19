@@ -18,11 +18,11 @@ import path from 'path';
 
 const app = express();
 const port = process.env.PORT || 8000;
-const compositionId = 'HelloWorld';
 
 const cache = new Map<string, string>();
 
-app.get('/', async (req, res) => {
+app.get('/:compositionId', async (req, res) => {
+	const {compositionId} = req.params;
 	const sendFile = (file: string) => {
 		fs.createReadStream(file)
 			.pipe(res)
@@ -31,8 +31,10 @@ app.get('/', async (req, res) => {
 			});
 	};
 	try {
-		if (cache.get(JSON.stringify(req.query))) {
-			sendFile(cache.get(JSON.stringify(req.query)) as string);
+		const cacheKey = req.url.toString();
+
+		if (cache.has(cacheKey)) {
+			sendFile(cache.get(cacheKey) as string);
 			return;
 		}
 		const bundled = await bundle(path.join(__dirname, './src/index.tsx'));
@@ -73,7 +75,7 @@ app.get('/', async (req, res) => {
 			imageFormat: 'jpeg',
 			assetsInfo,
 		});
-		cache.set(JSON.stringify(req.query), finalOutput);
+		cache.set(cacheKey, finalOutput);
 		sendFile(finalOutput);
 		console.log('Video rendered and sent!');
 	} catch (err) {
@@ -93,7 +95,7 @@ console.log(
 		'',
 		'If you are running Hello World, try this:',
 		'',
-		`http://localhost:${port}?titleText=Hello,+World!&titleColor=red`,
+		`http://localhost:${port}/<compositionId>?input1=value1&input2=value2`,
 		'',
 	].join('\n')
 );
