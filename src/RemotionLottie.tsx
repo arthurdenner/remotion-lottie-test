@@ -1,4 +1,4 @@
-import React, {CSSProperties} from 'react';
+import {CSSProperties, useEffect, useRef, useState} from 'react';
 import lottie, {AnimationItem} from 'lottie-web';
 import {continueRender, delayRender, useCurrentFrame} from 'remotion';
 
@@ -30,13 +30,13 @@ const RemotionLottie = ({
 	speed = 1,
 	style,
 }: RemotionLottieProps) => {
-	const animationRef = React.useRef<AnimationItem>();
-	const lastFrameRef = React.useRef<number | null>(null);
-	const containerRef = React.useRef<HTMLDivElement>(null);
-	const [handle] = React.useState(delayRender);
+	const animationRef = useRef<AnimationItem>();
+	const lastFrameRef = useRef<number | null>(null);
+	const containerRef = useRef<HTMLDivElement>(null);
+	const [handle] = useState(delayRender);
 	const frame = useCurrentFrame();
 
-	React.useEffect(() => {
+	useEffect(() => {
 		if (!containerRef.current) {
 			return;
 		}
@@ -67,7 +67,7 @@ const RemotionLottie = ({
 		};
 	}, [animationData, handle, path, speed]);
 
-	React.useEffect(() => {
+	useEffect(() => {
 		if (!animationRef.current) {
 			return;
 		}
