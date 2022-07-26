@@ -1,4 +1,5 @@
-import {AbsoluteFill, Loop, Sequence, useVideoConfig} from 'remotion';
+import { useEffect, useState } from 'react';
+import {AbsoluteFill, continueRender, delayRender, Loop, Sequence, useVideoConfig} from 'remotion';
 import RemotionLottie from '../RemotionLottie';
 
 const animationPath =
@@ -6,6 +7,25 @@ const animationPath =
 
 const ExplodingBird = () => {
 	const {height, width} = useVideoConfig();
+	const [animationData, setAnimationData] = useState(null);
+	const [handle] = useState(delayRender);
+
+	useEffect(() => {
+		fetch(animationPath)
+			.then((res) => res.json())
+			.then(setAnimationData);
+	}, []);
+
+	useEffect(() => {
+		if (animationData) {
+			continueRender(handle);
+		}
+	}, [animationData, handle]);
+
+	if (!animationData) {
+		return null;
+	}
+
 	const birdLoops = 5;
 	const birdSpeed = 2;
 	const explosionSpeed = 0.5;
@@ -25,7 +45,7 @@ const ExplodingBird = () => {
 		<AbsoluteFill style={{height, width}}>
 			<Loop durationInFrames={birdDuration} times={birdLoops}>
 				<RemotionLottie
-					path={animationPath}
+					animationData={animationData}
 					speed={birdSpeed}
 					style={{height, width}}
 				/>
@@ -33,7 +53,7 @@ const ExplodingBird = () => {
 			<Sequence from={explosionFrom} durationInFrames={explosionDuration}>
 				<Sequence from={-explosionStart}>
 					<RemotionLottie
-						path={animationPath}
+						animationData={animationData}
 						speed={explosionSpeed}
 						style={{height, width}}
 					/>
@@ -45,7 +65,7 @@ const ExplodingBird = () => {
 			>
 				<Sequence from={-feathersStart}>
 					<RemotionLottie
-						path={animationPath}
+						animationData={animationData}
 						speed={feathersSpeed}
 						style={{height, width}}
 					/>
