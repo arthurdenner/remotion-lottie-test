@@ -1,5 +1,12 @@
-import { useEffect, useState } from 'react';
-import {AbsoluteFill, continueRender, delayRender, Loop, Sequence, useVideoConfig} from 'remotion';
+import {useEffect, useState} from 'react';
+import {
+	AbsoluteFill,
+	Loop,
+	Sequence,
+	continueRender,
+	delayRender,
+	useVideoConfig,
+} from 'remotion';
 import RemotionLottie from '../RemotionLottie';
 
 const animationPath =
@@ -27,8 +34,8 @@ const ExplodingBird = () => {
 	}
 
 	const birdLoops = 5;
-	const birdSpeed = 2;
-	const explosionSpeed = 0.5;
+	const birdSpeed = 1;
+	const explosionSpeed = 0.1;
 	const feathersSpeed = 0.8;
 	// This needs to be known by the developer, can we make dynamic via prop?
 	const birdNFrames = 23;
@@ -38,8 +45,11 @@ const ExplodingBird = () => {
 	const explosionFrom = birdDuration * birdLoops;
 	const explosionDuration = Math.floor(explosionNFrames / explosionSpeed);
 	const explosionStart = birdNFrames / explosionSpeed;
+	const feathersFrom = explosionFrom + explosionDuration;
 	const feathersDuration = Math.floor(feathersNFrames / feathersSpeed);
-	const feathersStart = explosionStart + explosionDuration;
+	const feathersStart = Math.ceil(
+		(birdNFrames + explosionNFrames) / feathersSpeed
+	);
 
 	return (
 		<AbsoluteFill style={{height, width}}>
@@ -59,10 +69,7 @@ const ExplodingBird = () => {
 					/>
 				</Sequence>
 			</Sequence>
-			<Sequence
-				from={explosionFrom + explosionDuration}
-				durationInFrames={feathersDuration}
-			>
+			<Sequence from={feathersFrom} durationInFrames={feathersDuration}>
 				<Sequence from={-feathersStart}>
 					<RemotionLottie
 						animationData={animationData}
