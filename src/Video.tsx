@@ -43,7 +43,7 @@ export const RemotionVideo: React.FC = () => {
 			<Composition
 				id="ExplodingBird"
 				lazyComponent={() => import('./ExplodingBird')}
-				durationInFrames={300}
+				durationInFrames={150}
 				fps={30}
 				height={850}
 				width={850}

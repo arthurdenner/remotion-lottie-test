@@ -1,6 +1,9 @@
 import {AbsoluteFill, Loop, Sequence, useVideoConfig} from 'remotion';
 import RemotionLottie from '../RemotionLottie';
 
+const animationPath =
+	'https://assets4.lottiefiles.com/packages/lf20_zyquagfl.json';
+
 const ExplodingBird = () => {
 	const {height, width} = useVideoConfig();
 	const birdLoops = 5;
