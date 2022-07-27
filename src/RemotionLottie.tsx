@@ -7,9 +7,9 @@ const getNextFrame = (
 	totalFrames: number,
 	loop?: boolean
 ) => {
-	return !loop
-		? Math.min(currentFrame, totalFrames)
-		: currentFrame % totalFrames;
+	return loop
+		? currentFrame % totalFrames
+		: Math.min(currentFrame, totalFrames);
 };
 
 // Simple and limited interface to start with
@@ -74,10 +74,9 @@ const RemotionLottie = ({
 
 		const {totalFrames} = animationRef.current;
 		const expectedFrame = frame * speed;
-		// Switch the last param to `true` to loop it
-		const segment = getNextFrame(expectedFrame, totalFrames, loop);
+		const nextFrame = getNextFrame(expectedFrame, totalFrames, loop);
 
-		animationRef.current.goToAndStop(segment, true);
+		animationRef.current.goToAndStop(nextFrame, true);
 	}, [frame, loop, speed]);
 
 	return <div ref={containerRef} className={className} style={style} />;
