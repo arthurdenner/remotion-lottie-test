@@ -1,33 +1,13 @@
-import {useEffect, useState} from 'react';
-import {
-	AbsoluteFill,
-	Loop,
-	Sequence,
-	continueRender,
-	delayRender,
-	useVideoConfig,
-} from 'remotion';
+import {AbsoluteFill, Loop, Sequence, useVideoConfig} from 'remotion';
 import RemotionLottie from '../RemotionLottie';
+import {useLottie} from '../useLottie';
 
 const animationPath =
 	'https://assets4.lottiefiles.com/packages/lf20_zyquagfl.json';
 
 const ExplodingBird = () => {
 	const {height, width} = useVideoConfig();
-	const [animationData, setAnimationData] = useState(null);
-	const [handle] = useState(delayRender);
-
-	useEffect(() => {
-		fetch(animationPath)
-			.then((res) => res.json())
-			.then(setAnimationData);
-	}, []);
-
-	useEffect(() => {
-		if (animationData) {
-			continueRender(handle);
-		}
-	}, [animationData, handle]);
+	const {animationData} = useLottie({path: animationPath});
 
 	if (!animationData) {
 		return null;
