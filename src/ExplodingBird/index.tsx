@@ -13,14 +13,15 @@ const ExplodingBird = () => {
 		return null;
 	}
 
-	const birdLoops = 5;
-	const birdSpeed = 1;
-	const explosionSpeed = 0.1;
-	const feathersSpeed = 0.8;
 	// This needs to be known by the developer, can we make dynamic via prop?
 	const birdNFrames = 23;
 	const explosionNFrames = 11;
 	const feathersNFrames = 61;
+	// Computed variables
+	const birdLoops = 3;
+	const birdSpeed = 1;
+	const explosionSpeed = 0.1;
+	const feathersSpeed = 0.8;
 	const birdDuration = Math.floor(birdNFrames / birdSpeed);
 	const explosionFrom = birdDuration * birdLoops;
 	const explosionDuration = Math.floor(explosionNFrames / explosionSpeed);

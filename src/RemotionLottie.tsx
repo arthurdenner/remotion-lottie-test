@@ -54,7 +54,6 @@ const RemotionLottie = ({
 
 		const {current: animation} = animationRef;
 		const onComplete = () => {
-			animation.setSpeed(speed);
 			continueRender(handle);
 		};
 
@@ -65,7 +64,15 @@ const RemotionLottie = ({
 			animation.removeEventListener('DOMLoaded', onComplete);
 			animation.destroy();
 		};
-	}, [animationData, handle, path, speed]);
+	}, [animationData, handle, path]);
+
+	useEffect(() => {
+		if (!animationRef.current) {
+			return;
+		}
+
+		animationRef.current.setSpeed(speed);
+	}, [speed]);
 
 	useEffect(() => {
 		if (!animationRef.current) {
