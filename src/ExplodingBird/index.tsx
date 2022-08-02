@@ -18,8 +18,8 @@ const ExplodingBird = () => {
 	const explosionNFrames = 11;
 	const feathersNFrames = 61;
 	// Computed variables
-	const birdLoops = 3;
-	const birdSpeed = 1;
+	const birdLoops = 6;
+	const birdSpeed = 2;
 	const explosionSpeed = 0.1;
 	const feathersSpeed = 0.8;
 	const birdDuration = Math.floor(birdNFrames / birdSpeed);
@@ -31,6 +31,7 @@ const ExplodingBird = () => {
 	const feathersStart = Math.ceil(
 		(birdNFrames + explosionNFrames) / feathersSpeed
 	);
+	const endFrom = feathersFrom + feathersDuration;
 
 	return (
 		<AbsoluteFill style={{height, width}}>
@@ -58,6 +59,13 @@ const ExplodingBird = () => {
 						style={{height, width}}
 					/>
 				</Sequence>
+			</Sequence>
+			<Sequence from={endFrom}>
+				<RemotionLottie
+					path="https://assets4.lottiefiles.com/private_files/lf30_uezjhwrv.json"
+					speed={2}
+					style={{height, width}}
+				/>
 			</Sequence>
 		</AbsoluteFill>
 	);
