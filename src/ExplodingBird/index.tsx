@@ -20,6 +20,17 @@ const paths = {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type PathsData = Record<keyof typeof paths, any> | null;
 
+// I don't know if all animations have the same shape
+interface Marker {
+	tm: number;
+	cm: string;
+	dr: number;
+}
+
+const getFramesByName = (name: string, markers: Marker[] = []) => {
+	return markers.find((m) => m.cm.includes(name))?.dr || 0;
+};
+
 const ExplodingBird = () => {
 	const {height, width} = useVideoConfig();
 	const [animationData, setAnimationData] = useState<PathsData>(null);
@@ -38,10 +49,11 @@ const ExplodingBird = () => {
 		}
 	}, [animationData, handle]);
 
-	// This needs to be known by the developer, can we make dynamic via prop?
-	const birdNFrames = 23;
-	const explosionNFrames = 11;
-	const feathersNFrames = 61;
+	// Get the markers and frames from the data
+	const markers = animationData?.bird?.markers;
+	const birdNFrames = getFramesByName('bird', markers);
+	const explosionNFrames = getFramesByName('explosion', markers);
+	const feathersNFrames = getFramesByName('feathers', markers);
 	// Computed variables
 	const birdLoops = 6;
 	const birdSpeed = 2;
