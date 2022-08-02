@@ -14,11 +14,26 @@ const getNextFrame = (
 
 // Simple and limited interface to start with
 interface RemotionLottieProps {
-	animationData?: any;
+	/**
+	 * JSON object with the animation data.
+	 * */
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	animationData?: Record<any, any>;
+	/**
+	 * CSS classes to apply on the container of the animation.
+	 */
 	className?: string;
+	/**
+	 * If the animation should loop after its end.
+	 */
 	loop?: boolean;
-	path?: string;
+	/**
+	 * The speed of the animation. Defaults to 1.
+	 */
 	speed?: number;
+	/**
+	 * CSS properties to apply on the container of the animation.
+	 */
 	style?: CSSProperties;
 }
 
@@ -26,10 +41,15 @@ const RemotionLottie = ({
 	animationData,
 	className,
 	loop,
-	path,
 	speed = 1,
 	style,
 }: RemotionLottieProps) => {
+	if (typeof animationData !== 'object') {
+		throw new Error(
+			'animationData should be provided as an object. If you only have the path to the JSON file, load it and pass it as animationData. See https://remotion.dev/link-tbd for more information.'
+		);
+	}
+
 	const animationRef = useRef<AnimationItem>();
 	const lastFrameRef = useRef<number | null>(null);
 	const containerRef = useRef<HTMLDivElement>(null);
@@ -45,7 +65,6 @@ const RemotionLottie = ({
 			container: containerRef.current,
 			autoplay: false,
 			animationData,
-			path,
 		});
 
 		if (lastFrameRef.current) {
@@ -64,7 +83,7 @@ const RemotionLottie = ({
 			animation.removeEventListener('DOMLoaded', onComplete);
 			animation.destroy();
 		};
-	}, [animationData, handle, path]);
+	}, [animationData, handle]);
 
 	useEffect(() => {
 		if (!animationRef.current) {

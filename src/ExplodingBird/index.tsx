@@ -1,17 +1,42 @@
-import {AbsoluteFill, Loop, Sequence, useVideoConfig} from 'remotion';
+import {useEffect, useState} from 'react';
+import {
+	AbsoluteFill,
+	Loop,
+	Sequence,
+	continueRender,
+	delayRender,
+	useVideoConfig,
+} from 'remotion';
 import RemotionLottie from '../RemotionLottie';
-import {useLottie} from '../useLottie';
 
-const animationPath =
-	'https://assets4.lottiefiles.com/packages/lf20_zyquagfl.json';
+const paths = {
+	// Credits: Christina Bublyk, Viktor Anisimov, Daniel Teasdale
+	// Source: https://lottiefiles.com/blog/tips-and-tutorials/how-to-chain-interactions-lottie-interactivity
+	bird: 'https://assets4.lottiefiles.com/packages/lf20_zyquagfl.json',
+	// Credits: https://lottiefiles.com/34191-end-color
+	end: 'https://assets4.lottiefiles.com/private_files/lf30_uezjhwrv.json',
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type PathsData = Record<keyof typeof paths, any> | null;
 
 const ExplodingBird = () => {
 	const {height, width} = useVideoConfig();
-	const {animationData} = useLottie({path: animationPath});
+	const [animationData, setAnimationData] = useState<PathsData>(null);
+	const [handle] = useState(delayRender);
 
-	if (!animationData) {
-		return null;
-	}
+	useEffect(() => {
+		Promise.all([
+			fetch(paths.bird).then((res) => res.json()),
+			fetch(paths.end).then((res) => res.json()),
+		]).then(([bird, end]) => setAnimationData({bird, end}));
+	}, []);
+
+	useEffect(() => {
+		if (animationData) {
+			continueRender(handle);
+		}
+	}, [animationData, handle]);
 
 	// This needs to be known by the developer, can we make dynamic via prop?
 	const birdNFrames = 23;
@@ -35,38 +60,44 @@ const ExplodingBird = () => {
 
 	return (
 		<AbsoluteFill style={{height, width}}>
-			<Loop durationInFrames={birdDuration} times={birdLoops}>
-				<RemotionLottie
-					animationData={animationData}
-					speed={birdSpeed}
-					style={{height, width}}
-				/>
-			</Loop>
-			<Sequence from={explosionFrom} durationInFrames={explosionDuration}>
-				<Sequence from={-explosionStart}>
+			{animationData?.bird ? (
+				<>
+					<Loop durationInFrames={birdDuration} times={birdLoops}>
+						<RemotionLottie
+							animationData={animationData.bird}
+							speed={birdSpeed}
+							style={{height, width}}
+						/>
+					</Loop>
+					<Sequence from={explosionFrom} durationInFrames={explosionDuration}>
+						<Sequence from={-explosionStart}>
+							<RemotionLottie
+								animationData={animationData.bird}
+								speed={explosionSpeed}
+								style={{height, width}}
+							/>
+						</Sequence>
+					</Sequence>
+					<Sequence from={feathersFrom} durationInFrames={feathersDuration}>
+						<Sequence from={-feathersStart}>
+							<RemotionLottie
+								animationData={animationData.bird}
+								speed={feathersSpeed}
+								style={{height, width}}
+							/>
+						</Sequence>
+					</Sequence>
+				</>
+			) : null}
+			{animationData?.end ? (
+				<Sequence from={endFrom}>
 					<RemotionLottie
-						animationData={animationData}
-						speed={explosionSpeed}
+						animationData={animationData.end}
+						speed={2}
 						style={{height, width}}
 					/>
 				</Sequence>
-			</Sequence>
-			<Sequence from={feathersFrom} durationInFrames={feathersDuration}>
-				<Sequence from={-feathersStart}>
-					<RemotionLottie
-						animationData={animationData}
-						speed={feathersSpeed}
-						style={{height, width}}
-					/>
-				</Sequence>
-			</Sequence>
-			<Sequence from={endFrom}>
-				<RemotionLottie
-					path="https://assets4.lottiefiles.com/private_files/lf30_uezjhwrv.json"
-					speed={2}
-					style={{height, width}}
-				/>
-			</Sequence>
+			) : null}
 		</AbsoluteFill>
 	);
 };
