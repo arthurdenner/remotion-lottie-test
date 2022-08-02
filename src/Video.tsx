@@ -5,18 +5,6 @@ export const RemotionVideo: React.FC = () => {
 	return (
 		<>
 			<Composition
-				id="HelloWorld"
-				component={HelloWorld}
-				durationInFrames={150}
-				fps={30}
-				height={1080}
-				width={1920}
-				defaultProps={{
-					titleText: 'Welcome to Remotion',
-					titleColor: 'black',
-				}}
-			/>
-			<Composition
 				id="Halloween-Balloons"
 				lazyComponent={() => import('./Halloween/Balloons')}
 				durationInFrames={90}
@@ -47,6 +35,18 @@ export const RemotionVideo: React.FC = () => {
 				fps={30}
 				height={850}
 				width={850}
+			/>
+			<Composition
+				id="HelloWorld"
+				component={HelloWorld}
+				durationInFrames={150}
+				fps={30}
+				height={1080}
+				width={1920}
+				defaultProps={{
+					titleText: 'Welcome to Remotion',
+					titleColor: 'black',
+				}}
 			/>
 		</>
 	);
