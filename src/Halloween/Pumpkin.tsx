@@ -1,7 +1,9 @@
-import React from 'react';
+import {useEffect, useState} from 'react';
 import {
 	AbsoluteFill,
 	Sequence,
+	continueRender,
+	delayRender,
 	interpolate,
 	useCurrentFrame,
 	useVideoConfig,
@@ -22,12 +24,29 @@ const Pumpkin = () => {
 		[0, 1, 1, 0]
 	);
 
+	const [animationData, setAnimationData] = useState(null);
+	const [handle] = useState(delayRender);
+
+	useEffect(() => {
+		// Credits: https://lottiefiles.com/37789-scary-halloween-pumpkin
+		fetch('https://assets2.lottiefiles.com/packages/lf20_c5izbrx1.json')
+			.then((res) => res.json())
+			.then(setAnimationData);
+	}, []);
+
+	useEffect(() => {
+		if (animationData) {
+			continueRender(handle);
+		}
+	}, [animationData, handle]);
+
+	if (!animationData) {
+		return null;
+	}
+
 	return (
 		<AbsoluteFill style={{opacity: animationOpacity}}>
-			<RemotionLottie
-				// https://lottiefiles.com/37789-scary-halloween-pumpkin
-				path="https://assets4.lottiefiles.com/packages/lf20_c5izbrx1.json"
-			/>
+			<RemotionLottie animationData={animationData} />
 		</AbsoluteFill>
 	);
 };
